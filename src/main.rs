@@ -4,13 +4,13 @@ use std::str;
 extern crate base64;
 
 fn to_base64(to_convert: &str) {
-    println!("Converting {}", to_convert);
+    // println!("Converting {}", to_convert);
     let b64 = base64::encode(to_convert);
     println!("{}", b64);
 }
 
 fn from_base64(to_convert: &str) {
-    println!("Converting {}", to_convert);
+    // println!("Converting {}", to_convert);
     let decoded = base64::decode(to_convert).unwrap();
 
     let s = match str::from_utf8(&decoded) {
@@ -22,13 +22,7 @@ fn from_base64(to_convert: &str) {
 }
 
 fn main() {
-    let matches = App::new("converter")
-        .about("Converter CLI")
-        .setting(AppSettings::SubcommandRequiredElseHelp)
-        .setting(AppSettings::AllowExternalSubcommands)
-        .setting(AppSettings::AllowInvalidUtf8ForExternalSubcommands)
-        .subcommand(
-            App::new("base64")
+    let base64_app = App::new("base64")
                 .about("Convert a string to base64")
                 .arg(Arg::new("encode")
                             .short('e')
@@ -43,7 +37,15 @@ fn main() {
                             .conflicts_with("encode")
                 )
                 .arg(arg!(<STRING> "The string to encode or decode"))
-                .setting(AppSettings::ArgRequiredElseHelp),
+                .setting(AppSettings::ArgRequiredElseHelp);
+
+    let matches = App::new("converter")
+        .about("Converter CLI")
+        .setting(AppSettings::SubcommandRequiredElseHelp)
+        .setting(AppSettings::AllowExternalSubcommands)
+        .setting(AppSettings::AllowInvalidUtf8ForExternalSubcommands)
+        .subcommand(
+            base64_app,
         )
         .get_matches();
 
