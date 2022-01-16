@@ -1,8 +1,10 @@
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn it_works() {
-        let result = 2 + 2;
-        assert_eq!(result, 4);
+mod base64 {
+    mod cli {
+        pub fn add_cli_commands() {}
+    }
+
+    mod actions {
+        pub fn encode() {}
+        pub fn decode() {}
     }
 }
