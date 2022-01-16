@@ -9,7 +9,7 @@ enum Base64Action {
 }
 
 fn init_base64_app() -> App<'static> {
-    App::new("base64")
+    let base64 = App::new("base64")
         .about("Convert a string to base64")
         .arg(Arg::new("encode")
                     .short('e')
@@ -24,7 +24,8 @@ fn init_base64_app() -> App<'static> {
                     .conflicts_with("encode")
         )
         .arg(arg!(<STRING> "The string to encode or decode"))
-        .setting(AppSettings::ArgRequiredElseHelp)
+        .setting(AppSettings::ArgRequiredElseHelp);
+    base64
 }
 
 fn to_base64(to_convert: &str) {
