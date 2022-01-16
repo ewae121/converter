@@ -3,23 +3,28 @@ use std::str;
 
 extern crate base64;
 
+enum Base64Action {
+    Encode,
+    Decode
+}
+
 fn init_base64_app() -> App<'static> {
     App::new("base64")
-                .about("Convert a string to base64")
-                .arg(Arg::new("encode")
-                            .short('e')
-                            .long("encode")
-                            .help("Encode the provided string to base64")
-                            .conflicts_with("decode")
-                )
-                .arg(Arg::new("decode")
-                            .short('d')
-                            .long("decode")
-                            .help("Decode the provided base64")
-                            .conflicts_with("encode")
-                )
-                .arg(arg!(<STRING> "The string to encode or decode"))
-                .setting(AppSettings::ArgRequiredElseHelp)
+        .about("Convert a string to base64")
+        .arg(Arg::new("encode")
+                    .short('e')
+                    .long("encode")
+                    .help("Encode the provided string to base64")
+                    .conflicts_with("decode")
+        )
+        .arg(Arg::new("decode")
+                    .short('d')
+                    .long("decode")
+                    .help("Decode the provided base64")
+                    .conflicts_with("encode")
+        )
+        .arg(arg!(<STRING> "The string to encode or decode"))
+        .setting(AppSettings::ArgRequiredElseHelp)
 }
 
 fn to_base64(to_convert: &str) {
@@ -56,10 +61,19 @@ fn main() {
     match matches.subcommand() {
         Some(("base64", sub_matches)) => {
             let value = sub_matches.value_of("STRING").expect("required");
+
+            let mut action = Base64Action::Encode;
             if sub_matches.is_present("decode") {
-                from_base64(value);
-            } else {
-                to_base64(value);
+                action = Base64Action::Decode;    
+            }
+
+            match action {
+                Base64Action::Decode => {
+                    from_base64(value);
+                },
+                Base64Action::Encode => {
+                    to_base64(value);
+                }
             }
         }
         Some((ext, sub_matches)) => {
