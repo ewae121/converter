@@ -26,6 +26,26 @@ pub mod converter_base64 {
                 .setting(AppSettings::ArgRequiredElseHelp);
             base64
         }
+
+        pub fn exec_command (sub_matches : &clap::ArgMatches) {
+            let value = sub_matches.value_of("STRING").expect("required");
+
+            let mut action = Base64Action::Encode;
+            if sub_matches.is_present("decode") {
+                action = Base64Action::Decode;    
+            }
+
+            match action {
+                Base64Action::Decode => {
+                    // from_base64(value);
+                    super::actions::decode(value);
+                },
+                Base64Action::Encode => {
+                    // to_base64(value);
+                    super::actions::encode(value);
+                }
+            }
+        }
     }
 
     pub mod actions {
