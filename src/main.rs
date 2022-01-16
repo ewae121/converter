@@ -3,7 +3,7 @@ use clap::{App, AppSettings};
 extern crate base64;
 
 fn main() {
-    let base64_app = converter::converter_base64::cli::add_cli_commands();
+    let base64_app = converter::converter_base64::cli::add_commands();
 
     let matches = App::new("converter")
         .about("Converter CLI")
@@ -17,7 +17,7 @@ fn main() {
 
     match matches.subcommand() {
         Some(("base64", sub_matches)) => {
-            converter::converter_base64::cli::exec_command(sub_matches);
+            converter::converter_base64::cli::execute(sub_matches);
         }
         Some((ext, sub_matches)) => {
             let args = sub_matches

@@ -7,7 +7,7 @@ pub mod converter_base64 {
             Decode
         }
 
-        pub fn add_cli_commands() -> App<'static> {
+        pub fn add_commands() -> App<'static> {
             let base64 = App::new("base64")
                 .about("Convert a string to base64")
                 .arg(Arg::new("encode")
@@ -27,7 +27,7 @@ pub mod converter_base64 {
             base64
         }
 
-        pub fn exec_command (sub_matches : &clap::ArgMatches) {
+        pub fn execute (sub_matches : &clap::ArgMatches) {
             let value = sub_matches.value_of("STRING").expect("required");
 
             let mut action = Base64Action::Encode;
@@ -38,11 +38,13 @@ pub mod converter_base64 {
             match action {
                 Base64Action::Decode => {
                     // from_base64(value);
-                    super::actions::decode(value);
+                    let result = super::actions::decode(value);
+                    println!("{}", result);
                 },
                 Base64Action::Encode => {
                     // to_base64(value);
-                    super::actions::encode(value);
+                    let result = super::actions::encode(value);
+                    println!("{}", result);
                 }
             }
         }
@@ -53,12 +55,12 @@ pub mod converter_base64 {
 
         use std::str;
 
-        pub fn encode(value: &str) {
+        pub fn encode(value: &str) -> String {
             // println!("Converting {}", value);
             let b64 = base64::encode(value);
-            println!("{}", b64);
+            b64
         }
-        pub fn decode(value : &str) {
+        pub fn decode(value : &str) -> String {
             // println!("Converting {}", value);
             let decoded = base64::decode(value).unwrap();
 
@@ -67,7 +69,8 @@ pub mod converter_base64 {
                 Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
             };
 
-            println!("{}", s);
+            let s = String::from(s);
+            s
         }
     }
 }
