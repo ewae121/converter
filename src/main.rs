@@ -1,4 +1,4 @@
-use clap::{arg, Arg, App, AppSettings};
+use clap::{App, AppSettings};
 use std::str;
 
 extern crate base64;
@@ -8,46 +8,46 @@ enum Base64Action {
     Decode
 }
 
-fn init_base64_app() -> App<'static> {
-    let base64 = App::new("base64")
-        .about("Convert a string to base64")
-        .arg(Arg::new("encode")
-                    .short('e')
-                    .long("encode")
-                    .help("Encode the provided string to base64")
-                    .conflicts_with("decode")
-        )
-        .arg(Arg::new("decode")
-                    .short('d')
-                    .long("decode")
-                    .help("Decode the provided base64")
-                    .conflicts_with("encode")
-        )
-        .arg(arg!(<STRING> "The string to encode or decode"))
-        .setting(AppSettings::ArgRequiredElseHelp);
-    base64
-}
+// fn init_base64_app() -> App<'static> {
+//     let base64 = App::new("base64")
+//         .about("Convert a string to base64")
+//         .arg(Arg::new("encode")
+//                     .short('e')
+//                     .long("encode")
+//                     .help("Encode the provided string to base64")
+//                     .conflicts_with("decode")
+//         )
+//         .arg(Arg::new("decode")
+//                     .short('d')
+//                     .long("decode")
+//                     .help("Decode the provided base64")
+//                     .conflicts_with("encode")
+//         )
+//         .arg(arg!(<STRING> "The string to encode or decode"))
+//         .setting(AppSettings::ArgRequiredElseHelp);
+//     base64
+// }
 
-fn to_base64(to_convert: &str) {
-    // println!("Converting {}", to_convert);
-    let b64 = base64::encode(to_convert);
-    println!("{}", b64);
-}
-
-fn from_base64(to_convert: &str) {
-    // println!("Converting {}", to_convert);
-    let decoded = base64::decode(to_convert).unwrap();
-
-    let s = match str::from_utf8(&decoded) {
-        Ok(v) => v,
-        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
-    };
-
-    println!("{}", s);
-}
+//fn to_base64(to_convert: &str) {
+//    // println!("Converting {}", to_convert);
+//    let b64 = base64::encode(to_convert);
+//    println!("{}", b64);
+//}
+//
+//fn from_base64(to_convert: &str) {
+//    // println!("Converting {}", to_convert);
+//    let decoded = base64::decode(to_convert).unwrap();
+//
+//    let s = match str::from_utf8(&decoded) {
+//        Ok(v) => v,
+//        Err(e) => panic!("Invalid UTF-8 sequence: {}", e),
+//    };
+//
+//    println!("{}", s);
+//}
 
 fn main() {
-    let base64_app = init_base64_app();
+    let base64_app = converter::converter_base64::cli::add_cli_commands();
 
     let matches = App::new("converter")
         .about("Converter CLI")
@@ -70,10 +70,12 @@ fn main() {
 
             match action {
                 Base64Action::Decode => {
-                    from_base64(value);
+                    // from_base64(value);
+                    converter::converter_base64::actions::decode(value);
                 },
                 Base64Action::Encode => {
-                    to_base64(value);
+                    // to_base64(value);
+                    converter::converter_base64::actions::encode(value);
                 }
             }
         }
