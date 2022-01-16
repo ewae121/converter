@@ -3,6 +3,25 @@ use std::str;
 
 extern crate base64;
 
+fn init_base64_app() -> App<'static> {
+    App::new("base64")
+                .about("Convert a string to base64")
+                .arg(Arg::new("encode")
+                            .short('e')
+                            .long("encode")
+                            .help("Encode the provided string to base64")
+                            .conflicts_with("decode")
+                )
+                .arg(Arg::new("decode")
+                            .short('d')
+                            .long("decode")
+                            .help("Decode the provided base64")
+                            .conflicts_with("encode")
+                )
+                .arg(arg!(<STRING> "The string to encode or decode"))
+                .setting(AppSettings::ArgRequiredElseHelp)
+}
+
 fn to_base64(to_convert: &str) {
     // println!("Converting {}", to_convert);
     let b64 = base64::encode(to_convert);
@@ -22,22 +41,7 @@ fn from_base64(to_convert: &str) {
 }
 
 fn main() {
-    let base64_app = App::new("base64")
-                .about("Convert a string to base64")
-                .arg(Arg::new("encode")
-                            .short('e')
-                            .long("encode")
-                            .help("Encode the provided string to base64")
-                            .conflicts_with("decode")
-                )
-                .arg(Arg::new("decode")
-                            .short('d')
-                            .long("decode")
-                            .help("Decode the provided base64")
-                            .conflicts_with("encode")
-                )
-                .arg(arg!(<STRING> "The string to encode or decode"))
-                .setting(AppSettings::ArgRequiredElseHelp);
+    let base64_app = init_base64_app();
 
     let matches = App::new("converter")
         .about("Converter CLI")
